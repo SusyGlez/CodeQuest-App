@@ -1,0 +1,2042 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeQuest — Learn HTML, CSS &amp; JavaScript</title>
+    <style>
+      /* ===== CSS Reset & Variables ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface2: #334155;
+        --border: #475569;
+        --text: #f1f5f9;
+        --text-dim: #94a3b8;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        --success: #22c55e;
+        --success-bg: #052e16;
+        --error: #ef4444;
+        --error-bg: #450a0a;
+        --warning: #f59e0b;
+        --warning-bg: #451a03;
+        --xp: #a855f7;
+        --html-color: #f97316;
+        --css-color: #3b82f6;
+        --js-color: #eab308;
+        --radius: 8px;
+        --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+        --mono: "SF Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      /* ===== Navigation ===== */
+      nav {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-brand {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--accent);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-brand:hover {
+        opacity: 0.8;
+      }
+
+      .nav-xp {
+        background: linear-gradient(135deg, var(--xp), #7c3aed);
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      /* ===== Main Container ===== */
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 24px;
+      }
+
+      /* ===== Dashboard ===== */
+      .dashboard-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, var(--accent), var(--xp));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .dashboard-header p {
+        color: var(--text-dim);
+        font-size: 1.1rem;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+        margin-bottom: 36px;
+      }
+
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        text-align: center;
+      }
+
+      .stat-card .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+
+      .stat-card .stat-label {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        margin-top: 4px;
+      }
+
+      /* ===== Topic Cards ===== */
+      .topics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+      }
+
+      .topic-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .topic-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .topic-card.locked {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .topic-card-header {
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .topic-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      .topic-card-header h2 {
+        font-size: 1.3rem;
+      }
+      .topic-card-header .topic-unlock {
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+      }
+
+      .topic-progress-bar {
+        height: 4px;
+        background: var(--surface2);
+      }
+
+      .topic-progress-fill {
+        height: 100%;
+        transition: width 0.4s ease;
+      }
+
+      .topic-card-body {
+        padding: 16px 24px 20px;
+      }
+
+      .difficulty-group {
+        margin-bottom: 12px;
+      }
+
+      .difficulty-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .difficulty-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+      }
+
+      .exercise-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .exercise-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.15s;
+        font-size: 0.9rem;
+      }
+
+      .exercise-item:hover {
+        background: var(--surface2);
+      }
+
+      .exercise-item.locked {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .exercise-item .ex-status {
+        width: 22px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .exercise-item .ex-title {
+        flex: 1;
+      }
+
+      .exercise-item .ex-xp {
+        font-size: 0.75rem;
+        color: var(--xp);
+        font-weight: 600;
+      }
+
+      /* ===== Exercise View ===== */
+      .exercise-view {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        height: calc(100vh - 60px);
+      }
+
+      .exercise-prompt-panel {
+        padding: 28px;
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .exercise-back-btn {
+        background: none;
+        border: none;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0;
+      }
+
+      .exercise-back-btn:hover {
+        text-decoration: underline;
+      }
+
+      .exercise-meta {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
+      .badge-html {
+        background: rgba(249, 115, 22, 0.15);
+        color: var(--html-color);
+      }
+      .badge-css {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--css-color);
+      }
+      .badge-javascript {
+        background: rgba(234, 179, 8, 0.15);
+        color: var(--js-color);
+      }
+      .badge-easy {
+        background: rgba(34, 197, 94, 0.1);
+        color: var(--success);
+      }
+      .badge-medium {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning);
+      }
+      .badge-hard {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--error);
+      }
+
+      .exercise-prompt-panel h1 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+      }
+
+      .exercise-prompt-text {
+        color: var(--text-dim);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 24px;
+      }
+
+      .hint-box {
+        background: var(--warning-bg);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        display: none;
+      }
+
+      .hint-box.visible {
+        display: block;
+      }
+
+      .hint-box strong {
+        color: var(--warning);
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+      }
+
+      .hint-box p {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+      }
+
+      .solution-box {
+        background: var(--success-bg);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        display: none;
+      }
+
+      .solution-box.visible {
+        display: block;
+      }
+
+      .solution-box strong {
+        color: var(--success);
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+      }
+
+      .solution-box pre {
+        background: var(--bg);
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .solution-box .explanation {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        font-style: italic;
+      }
+
+      .prompt-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+        flex-wrap: wrap;
+      }
+
+      .prompt-actions button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: background 0.15s;
+      }
+
+      .prompt-actions button:hover {
+        background: var(--border);
+      }
+
+      /* ===== Editor Panel ===== */
+      .editor-panel {
+        display: flex;
+        flex-direction: column;
+        background: #0d1117;
+      }
+
+      .editor-panel-header {
+        padding: 10px 16px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .editor-textarea {
+        flex: 1;
+        width: 100%;
+        background: #0d1117;
+        color: #c9d1d9;
+        border: none;
+        padding: 20px;
+        font-family: var(--mono);
+        font-size: 14px;
+        line-height: 1.6;
+        resize: none;
+        outline: none;
+        tab-size: 2;
+      }
+
+      .editor-textarea::placeholder {
+        color: #484f58;
+      }
+
+      .editor-bottom-bar {
+        padding: 12px 16px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-check {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .btn-check:hover {
+        background: var(--accent-hover);
+      }
+
+      .btn-next {
+        background: var(--success);
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: none;
+      }
+
+      .btn-next:hover {
+        opacity: 0.9;
+      }
+
+      .feedback-inline {
+        flex: 1;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .feedback-inline.correct {
+        color: var(--success);
+      }
+      .feedback-inline.incorrect {
+        color: var(--error);
+      }
+
+      /* ===== Preview Panel ===== */
+      .preview-pane {
+        border-top: 1px solid var(--border);
+        background: white;
+        max-height: 200px;
+        overflow: auto;
+      }
+
+      .preview-pane iframe {
+        width: 100%;
+        height: 200px;
+        border: none;
+      }
+
+      /* ===== Reset Modal ===== */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-overlay.visible {
+        display: flex;
+      }
+
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px;
+        max-width: 420px;
+        width: 90%;
+        text-align: center;
+      }
+
+      .modal h2 {
+        margin-bottom: 12px;
+      }
+      .modal p {
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .modal-actions button {
+        padding: 10px 24px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .btn-cancel {
+        background: var(--surface2);
+        color: var(--text);
+      }
+
+      .btn-danger {
+        background: var(--error);
+        color: white;
+      }
+
+      /* ===== Responsive ===== */
+      @media (max-width: 768px) {
+        .exercise-view {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+
+        .exercise-prompt-panel {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+          max-height: 45vh;
+        }
+
+        .editor-textarea {
+          min-height: 250px;
+        }
+
+        .topics-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* ===== Scrollbar ===== */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--surface2);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--border);
+      }
+
+      /* ===== Utility ===== */
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-brand" onclick="navigateTo('dashboard')">
+        💻 CodeQuest
+      </div>
+      <div class="nav-xp" id="nav-xp">⭐ 0 XP</div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app"></main>
+
+    <!-- Reset Progress Modal -->
+    <div class="modal-overlay" id="reset-modal">
+      <div class="modal">
+        <h2>⚠️ Reset Progress?</h2>
+        <p>
+          This will erase all your progress, XP, and exercise completions. This
+          cannot be undone.
+        </p>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeResetModal()">Cancel</button>
+          <button class="btn-danger" onclick="confirmReset()">
+            Reset Everything
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ============================================================
+      //  EXERCISE DATA
+      // ============================================================
+
+      const exercises = [
+        // ─── HTML EASY ─────────────────────────────────────────────
+        {
+          id: "html-easy-01",
+          topic: "html",
+          difficulty: "easy",
+          title: "Create a Heading",
+          prompt: 'Write an HTML h1 heading that says "Hello, World!".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution: "<h1>Hello, World!</h1>",
+          hint: "Use the <h1> tag to define the most important heading.",
+          explanation:
+            "The <h1> element defines the most important heading on a page. It is displayed in large bold text by default.",
+          xp: 10,
+        },
+        {
+          id: "html-easy-02",
+          topic: "html",
+          difficulty: "easy",
+          title: "Write a Paragraph",
+          prompt:
+            'Create a paragraph element containing the text "Learning HTML is fun!".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution: "<p>Learning HTML is fun!</p>",
+          hint: "The <p> tag defines a paragraph.",
+          explanation:
+            "The <p> element represents a paragraph of text. Browsers automatically add some margin before and after each <p> element.",
+          xp: 10,
+        },
+        {
+          id: "html-easy-03",
+          topic: "html",
+          difficulty: "easy",
+          title: "Create a Link",
+          prompt:
+            'Create a link that says "Visit Google" and points to "https://google.com".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution: '<a href="https://google.com">Visit Google</a>',
+          hint: "Use the <a> tag with an href attribute.",
+          explanation:
+            "The <a> (anchor) element creates a hyperlink. The href attribute specifies the URL the link points to.",
+          xp: 10,
+        },
+        {
+          id: "html-easy-04",
+          topic: "html",
+          difficulty: "easy",
+          title: "Add an Image",
+          prompt:
+            'Add an image with src "logo.png" and alt text "Company Logo".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution: '<img src="logo.png" alt="Company Logo">',
+          hint: "Use the <img> tag with src and alt attributes. The img tag is self-closing.",
+          explanation:
+            "The <img> element embeds an image. The src attribute specifies the path, and alt provides alternative text for accessibility.",
+          xp: 10,
+        },
+        // ─── HTML MEDIUM ───────────────────────────────────────────
+        {
+          id: "html-medium-01",
+          topic: "html",
+          difficulty: "medium",
+          title: "Build a Simple Form",
+          prompt:
+            'Create a form with a text input (name="username", placeholder="Enter username") and a submit button that says "Submit".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            '<form>\n  <input type="text" name="username" placeholder="Enter username">\n  <button type="submit">Submit</button>\n</form>',
+          hint: "Use the <form> tag with an <input> and a <button> inside.",
+          explanation:
+            'Forms collect user input. The <input> element with type="text" creates a text field, and <button type="submit"> creates a submit button.',
+          xp: 25,
+        },
+        {
+          id: "html-medium-02",
+          topic: "html",
+          difficulty: "medium",
+          title: "Create a Table",
+          prompt:
+            'Create a table with one header row containing "Name" and "Age", and one data row with "Alice" and "25".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            "<table>\n  <tr>\n    <th>Name</th>\n    <th>Age</th>\n  </tr>\n  <tr>\n    <td>Alice</td>\n    <td>25</td>\n  </tr>\n</table>",
+          hint: "Use <table>, <tr>, <th> for headers, and <td> for data cells.",
+          explanation:
+            "Tables use <tr> for rows, <th> for header cells, and <td> for data cells. Headers are bold and centered by default.",
+          xp: 25,
+        },
+        {
+          id: "html-medium-03",
+          topic: "html",
+          difficulty: "medium",
+          title: "Semantic Article",
+          prompt:
+            'Create a semantic <article> element containing an <h2> with "Blog Post" and a <p> with "This is the content.".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            "<article>\n  <h2>Blog Post</h2>\n  <p>This is the content.</p>\n</article>",
+          hint: "The <article> element represents a self-contained composition.",
+          explanation:
+            "Semantic elements like <article> give meaning to the structure. An article represents a self-contained composition intended for independent distribution.",
+          xp: 25,
+        },
+        {
+          id: "html-medium-04",
+          topic: "html",
+          difficulty: "medium",
+          title: "Navigation with List",
+          prompt:
+            'Create a <nav> containing an unordered list with three list items: "Home", "About", "Contact".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            "<nav>\n  <ul>\n    <li>Home</li>\n    <li>About</li>\n    <li>Contact</li>\n  </ul>\n</nav>",
+          hint: "Use <nav> for navigation, with <ul> and <li> inside.",
+          explanation:
+            "The <nav> element represents a section of navigation links. Using <ul>/<li> provides proper structure for screen readers.",
+          xp: 25,
+        },
+        // ─── HTML HARD ─────────────────────────────────────────────
+        {
+          id: "html-hard-01",
+          topic: "html",
+          difficulty: "hard",
+          title: "ARIA Button",
+          prompt:
+            'Create a <div> that acts as a button using ARIA: role="button", aria-label="Close dialog", and tabindex="0".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            '<div role="button" aria-label="Close dialog" tabindex="0">Close</div>',
+          hint: "Use role, aria-label, and tabindex attributes on a <div>.",
+          explanation:
+            'ARIA attributes make non-semantic elements accessible. role="button" tells screen readers this is a button, aria-label provides a label, and tabindex="0" makes it focusable.',
+          xp: 50,
+        },
+        {
+          id: "html-hard-02",
+          topic: "html",
+          difficulty: "hard",
+          title: "SEO Meta Tags",
+          prompt:
+            'Create a <head> section with a <meta> description tag containing "Learn web development with CodeQuest" and a <meta> charset set to "UTF-8".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            '<head>\n  <meta charset="UTF-8">\n  <meta name="description" content="Learn web development with CodeQuest">\n</head>',
+          hint: "Use <meta> tags with name/content for description and charset attribute for encoding.",
+          explanation:
+            "Meta tags provide metadata about the page. The description meta tag helps search engines understand page content, and charset declares the character encoding.",
+          xp: 50,
+        },
+        {
+          id: "html-hard-03",
+          topic: "html",
+          difficulty: "hard",
+          title: "Complex Form with Fieldset",
+          prompt:
+            'Create a form with a <fieldset>, a <legend> saying "Personal Info", a label "Email:" with an email input (name="email", required), and a submit button.',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            '<form>\n  <fieldset>\n    <legend>Personal Info</legend>\n    <label>Email:\n      <input type="email" name="email" required>\n    </label>\n    <button type="submit">Submit</button>\n  </fieldset>\n</form>',
+          hint: "Use <fieldset> to group related fields and <legend> to title the group.",
+          explanation:
+            "The <fieldset> element groups related form controls, and <legend> provides a caption. Using <label> with inputs improves accessibility. The required attribute enforces field completion.",
+          xp: 50,
+        },
+        {
+          id: "html-hard-04",
+          topic: "html",
+          difficulty: "hard",
+          title: "Picture Element",
+          prompt:
+            'Create a <picture> element with a <source> for screens min-width 800px using "large.jpg" and an <img> fallback using "small.jpg" with alt "Responsive image".',
+          starterCode: "<!-- Write your HTML here -->",
+          solution:
+            '<picture>\n  <source media="(min-width: 800px)" srcset="large.jpg">\n  <img src="small.jpg" alt="Responsive image">\n</picture>',
+          hint: "Use <picture> with <source> and media attribute, plus an <img> fallback.",
+          explanation:
+            "The <picture> element lets you serve different images for different screen sizes. The <source> element specifies alternate images, and <img> is the fallback.",
+          xp: 50,
+        },
+
+        // ─── CSS EASY ──────────────────────────────────────────────
+        {
+          id: "css-easy-01",
+          topic: "css",
+          difficulty: "easy",
+          title: "Change Text Color",
+          prompt:
+            "Write a CSS rule that sets the color of all <h1> elements to blue.",
+          starterCode: "/* Write your CSS here */",
+          solution: "h1 {\n  color: blue;\n}",
+          hint: "Use the element selector and the color property.",
+          explanation:
+            "Element selectors target all instances of an HTML element. The color property sets the text color.",
+          xp: 10,
+        },
+        {
+          id: "css-easy-02",
+          topic: "css",
+          difficulty: "easy",
+          title: "Set Font Size",
+          prompt:
+            "Write a CSS rule that sets the font-size of the body to 16px.",
+          starterCode: "/* Write your CSS here */",
+          solution: "body {\n  font-size: 16px;\n}",
+          hint: "Use the body selector and font-size property.",
+          explanation:
+            "The font-size property sets the size of text. Using it on body establishes a base size for the entire page.",
+          xp: 10,
+        },
+        {
+          id: "css-easy-03",
+          topic: "css",
+          difficulty: "easy",
+          title: "Add Padding",
+          prompt:
+            'Write a CSS rule that gives elements with class "box" a padding of 20px.',
+          starterCode: "/* Write your CSS here */",
+          solution: ".box {\n  padding: 20px;\n}",
+          hint: "Use the class selector (.) and the padding property.",
+          explanation:
+            "The padding property adds space inside an element, between its content and border. Class selectors start with a dot (.).",
+          xp: 10,
+        },
+        {
+          id: "css-easy-04",
+          topic: "css",
+          difficulty: "easy",
+          title: "Background Color",
+          prompt:
+            'Write a CSS rule that sets the background-color of the element with ID "header" to #333.',
+          starterCode: "/* Write your CSS here */",
+          solution: "#header {\n  background-color: #333;\n}",
+          hint: "Use the ID selector (#) and background-color property.",
+          explanation:
+            "ID selectors start with # and target a unique element. The background-color property sets the background color of an element.",
+          xp: 10,
+        },
+        // ─── CSS MEDIUM ────────────────────────────────────────────
+        {
+          id: "css-medium-01",
+          topic: "css",
+          difficulty: "medium",
+          title: "Flexbox Center",
+          prompt:
+            'Write CSS for a class "container" that uses flexbox to center its children both horizontally and vertically.',
+          starterCode: "/* Write your CSS here */",
+          solution:
+            ".container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
+          hint: "Use display: flex with justify-content and align-items.",
+          explanation:
+            "Flexbox is a layout model. display: flex activates it, justify-content centers along the main axis, and align-items centers along the cross axis.",
+          xp: 25,
+        },
+        {
+          id: "css-medium-02",
+          topic: "css",
+          difficulty: "medium",
+          title: "CSS Grid Layout",
+          prompt:
+            'Create a CSS rule for class "grid" that makes a 3-column grid with equal widths and a 10px gap.',
+          starterCode: "/* Write your CSS here */",
+          solution:
+            ".grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr;\n  gap: 10px;\n}",
+          hint: "Use display: grid, grid-template-columns with fr units, and gap.",
+          explanation:
+            "CSS Grid creates two-dimensional layouts. grid-template-columns defines column sizes (1fr = 1 fraction of available space), and gap sets spacing between grid items.",
+          xp: 25,
+        },
+        {
+          id: "css-medium-03",
+          topic: "css",
+          difficulty: "medium",
+          title: "Hover Effect",
+          prompt:
+            'Write a CSS rule so that when a user hovers over elements with class "btn", the background-color changes to #0056b3.',
+          starterCode: "/* Write your CSS here */",
+          solution: ".btn:hover {\n  background-color: #0056b3;\n}",
+          hint: "Use the :hover pseudo-class.",
+          explanation:
+            "Pseudo-classes like :hover let you style elements in specific states. :hover applies when the user is pointing at the element with a mouse.",
+          xp: 25,
+        },
+        {
+          id: "css-medium-04",
+          topic: "css",
+          difficulty: "medium",
+          title: "Responsive Font Size",
+          prompt:
+            'Write a CSS rule for class "title" that sets the font-size to 2rem and line-height to 1.5.',
+          starterCode: "/* Write your CSS here */",
+          solution: ".title {\n  font-size: 2rem;\n  line-height: 1.5;\n}",
+          hint: "Use rem units for font-size and a unitless value for line-height.",
+          explanation:
+            "rem units are relative to the root font size, making text scalable. A unitless line-height multiplied by the font-size creates consistent spacing.",
+          xp: 25,
+        },
+        // ─── CSS HARD ──────────────────────────────────────────────
+        {
+          id: "css-hard-01",
+          topic: "css",
+          difficulty: "hard",
+          title: "Keyframe Animation",
+          prompt:
+            'Create a @keyframes animation called "fadeIn" that goes from opacity 0 to opacity 1. Then apply it to class "fade" with a duration of 1s.',
+          starterCode: "/* Write your CSS here */",
+          solution:
+            "@keyframes fadeIn {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n.fade {\n  animation: fadeIn 1s;\n}",
+          hint: "Define @keyframes with from/to blocks, then use the animation shorthand property.",
+          explanation:
+            "@keyframes defines animation steps. The animation shorthand property applies the keyframes to an element with a specified duration.",
+          xp: 50,
+        },
+        {
+          id: "css-hard-02",
+          topic: "css",
+          difficulty: "hard",
+          title: "CSS Custom Properties",
+          prompt:
+            'Define a CSS custom property --primary-color with value #3b82f6 on :root, then use it as the color for class "link".',
+          starterCode: "/* Write your CSS here */",
+          solution:
+            ":root {\n  --primary-color: #3b82f6;\n}\n\n.link {\n  color: var(--primary-color);\n}",
+          hint: "Define custom properties with -- prefix on :root, and use var() to reference them.",
+          explanation:
+            "CSS custom properties (variables) are defined with -- prefix and accessed with var(). Defining them on :root makes them globally available.",
+          xp: 50,
+        },
+        {
+          id: "css-hard-03",
+          topic: "css",
+          difficulty: "hard",
+          title: "Media Query",
+          prompt:
+            'Write a media query that sets the font-size of class "content" to 14px when the screen width is 768px or less.',
+          starterCode: "/* Write your CSS here */",
+          solution:
+            "@media (max-width: 768px) {\n  .content {\n    font-size: 14px;\n  }\n}",
+          hint: "Use @media with max-width condition.",
+          explanation:
+            "Media queries apply styles conditionally based on screen characteristics. max-width: 768px targets screens 768px wide or narrower (typically tablets and phones).",
+          xp: 50,
+        },
+        {
+          id: "css-hard-04",
+          topic: "css",
+          difficulty: "hard",
+          title: "Transition Effect",
+          prompt:
+            'Write CSS for class "card" that sets a transition on transform property for 0.3s ease, and on hover scales it to 1.05 using transform.',
+          starterCode: "/* Write your CSS here */",
+          solution:
+            ".card {\n  transition: transform 0.3s ease;\n}\n\n.card:hover {\n  transform: scale(1.05);\n}",
+          hint: "Use the transition shorthand property and :hover pseudo-class with transform: scale().",
+          explanation:
+            "Transitions animate property changes smoothly. The transition property specifies which property to animate, duration, and timing function. transform: scale() resizes the element.",
+          xp: 50,
+        },
+
+        // ─── JAVASCRIPT EASY ──────────────────────────────────────
+        {
+          id: "js-easy-01",
+          topic: "javascript",
+          difficulty: "easy",
+          title: "Declare a Variable",
+          prompt:
+            'Declare a variable called "greeting" using const and assign it the string "Hello, World!". Then log it to the console.',
+          starterCode: "// Write your JavaScript here",
+          solution: 'const greeting = "Hello, World!";\nconsole.log(greeting);',
+          hint: "Use const to declare a variable that won't change.",
+          explanation:
+            "const declares a block-scoped variable that cannot be reassigned. console.log() prints values to the console for debugging.",
+          xp: 10,
+        },
+        {
+          id: "js-easy-02",
+          topic: "javascript",
+          difficulty: "easy",
+          title: "Basic Math",
+          prompt:
+            'Create two variables: "a" with value 10 and "b" with value 5. Log their sum to the console.',
+          starterCode: "// Write your JavaScript here",
+          solution: "const a = 10;\nconst b = 5;\nconsole.log(a + b);",
+          hint: "Use the + operator to add numbers.",
+          explanation:
+            "JavaScript supports standard arithmetic operators: +, -, *, /. The result of a + b is 15.",
+          xp: 10,
+        },
+        {
+          id: "js-easy-03",
+          topic: "javascript",
+          difficulty: "easy",
+          title: "Write a Function",
+          prompt:
+            'Write a function called "double" that takes a number and returns it multiplied by 2. Then log the result of double(5).',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            "function double(n) {\n  return n * 2;\n}\nconsole.log(double(5));",
+          hint: "Use the function keyword, return the result of n * 2.",
+          explanation:
+            "Functions are reusable blocks of code. The return statement sends a value back to the caller. double(5) returns 10.",
+          xp: 10,
+        },
+        {
+          id: "js-easy-04",
+          topic: "javascript",
+          difficulty: "easy",
+          title: "String Template Literal",
+          prompt:
+            'Create a variable "name" with value "Alice". Then log "Hello, Alice!" using a template literal.',
+          starterCode: "// Write your JavaScript here",
+          solution: 'const name = "Alice";\nconsole.log(`Hello, ${name}!`);',
+          hint: "Use backticks (`) and ${} for string interpolation.",
+          explanation:
+            "Template literals use backticks and ${expression} syntax to embed variables and expressions inside strings.",
+          xp: 10,
+        },
+        // ─── JAVASCRIPT MEDIUM ────────────────────────────────────
+        {
+          id: "js-medium-01",
+          topic: "javascript",
+          difficulty: "medium",
+          title: "Array Filter",
+          prompt:
+            "Given an array [1, 2, 3, 4, 5, 6], use the filter method to create a new array containing only even numbers. Log the result.",
+          starterCode: "// Write your JavaScript here",
+          solution:
+            "const numbers = [1, 2, 3, 4, 5, 6];\nconst evens = numbers.filter(n => n % 2 === 0);\nconsole.log(evens);",
+          hint: "Use .filter() with a callback that checks if a number is even (n % 2 === 0).",
+          explanation:
+            "Array.filter() creates a new array with elements that pass a test function. The modulo operator (%) returns the remainder of division — even numbers have remainder 0 when divided by 2.",
+          xp: 25,
+        },
+        {
+          id: "js-medium-02",
+          topic: "javascript",
+          difficulty: "medium",
+          title: "Object Destructuring",
+          prompt:
+            'Create an object "person" with properties name: "Bob" and age: 30. Use destructuring to extract name and age, then log them.',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            'const person = { name: "Bob", age: 30 };\nconst { name, age } = person;\nconsole.log(name);\nconsole.log(age);',
+          hint: "Use { name, age } = object syntax.",
+          explanation:
+            "Object destructuring lets you extract properties into variables in one line. The variable names must match the property names.",
+          xp: 25,
+        },
+        {
+          id: "js-medium-03",
+          topic: "javascript",
+          difficulty: "medium",
+          title: "Array Map",
+          prompt:
+            'Given an array ["hello", "world"], use map to create a new array with each string in uppercase. Log the result.',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            'const words = ["hello", "world"];\nconst upper = words.map(w => w.toUpperCase());\nconsole.log(upper);',
+          hint: "Use .map() with .toUpperCase() on each element.",
+          explanation:
+            "Array.map() creates a new array by applying a function to every element. toUpperCase() converts a string to all capital letters.",
+          xp: 25,
+        },
+        {
+          id: "js-medium-04",
+          topic: "javascript",
+          difficulty: "medium",
+          title: "Find in Array",
+          prompt:
+            'Given an array of objects [{name: "Alice", age: 25}, {name: "Bob", age: 30}], use find to get the object where name is "Bob". Log the result.',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            'const people = [{name: "Alice", age: 25}, {name: "Bob", age: 30}];\nconst bob = people.find(p => p.name === "Bob");\nconsole.log(bob);',
+          hint: "Use .find() with a callback that checks the name property.",
+          explanation:
+            "Array.find() returns the first element that satisfies the test function. It returns undefined if no match is found.",
+          xp: 25,
+        },
+        // ─── JAVASCRIPT HARD ──────────────────────────────────────
+        {
+          id: "js-hard-01",
+          topic: "javascript",
+          difficulty: "hard",
+          title: "Promise and Async/Await",
+          prompt:
+            'Create an async function "fetchData" that returns a promise resolving to "Data loaded" after using await. Call it and log the result.',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            'async function fetchData() {\n  const result = await Promise.resolve("Data loaded");\n  return result;\n}\nfetchData().then(data => console.log(data));',
+          hint: "Use async/await with Promise.resolve() to create a resolved promise.",
+          explanation:
+            "async functions return promises. await pauses execution until a promise resolves. Promise.resolve() creates a promise that immediately resolves with the given value.",
+          xp: 50,
+        },
+        {
+          id: "js-hard-02",
+          topic: "javascript",
+          difficulty: "hard",
+          title: "Closure Counter",
+          prompt:
+            'Write a function "createCounter" that returns another function. Each time the returned function is called, it should return the next number starting from 1. Log the results of calling it 3 times.',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            "function createCounter() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  };\n}\nconst counter = createCounter();\nconsole.log(counter());\nconsole.log(counter());\nconsole.log(counter());",
+          hint: 'Use a closure — the inner function "remembers" the outer variable.',
+          explanation:
+            "A closure is a function that retains access to its outer scope's variables even after the outer function has returned. The count variable persists between calls to the inner function.",
+          xp: 50,
+        },
+        {
+          id: "js-hard-03",
+          topic: "javascript",
+          difficulty: "hard",
+          title: "Error Handling",
+          prompt:
+            "Write a function \"safeParse\" that takes a JSON string and returns the parsed object. If parsing fails, it should return null. Test it with valid JSON '{\"a\":1}' and invalid JSON 'not json', logging both results.",
+          starterCode: "// Write your JavaScript here",
+          solution:
+            'function safeParse(str) {\n  try {\n    return JSON.parse(str);\n  } catch (e) {\n    return null;\n  }\n}\nconsole.log(safeParse(\'{"a":1}\'));\nconsole.log(safeParse("not json"));',
+          hint: "Use try/catch to handle the JSON.parse error.",
+          explanation:
+            "try/catch blocks handle runtime errors gracefully. JSON.parse() throws a SyntaxError on invalid JSON. Catching it and returning null prevents the program from crashing.",
+          xp: 50,
+        },
+        {
+          id: "js-hard-04",
+          topic: "javascript",
+          difficulty: "hard",
+          title: "Array Reduce",
+          prompt:
+            'Use reduce to calculate the total price from an array of objects: [{name: "Apple", price: 1.5}, {name: "Banana", price: 0.75}, {name: "Cherry", price: 2.0}]. Log the total.',
+          starterCode: "// Write your JavaScript here",
+          solution:
+            'const items = [{name: "Apple", price: 1.5}, {name: "Banana", price: 0.75}, {name: "Cherry", price: 2.0}];\nconst total = items.reduce((sum, item) => sum + item.price, 0);\nconsole.log(total);',
+          hint: "Use .reduce() with an accumulator starting at 0, adding each item's price.",
+          explanation:
+            "Array.reduce() iterates over elements, accumulating a single value. The first argument is the callback (accumulator, current), and the second is the initial value of the accumulator.",
+          xp: 50,
+        },
+      ];
+
+      // ============================================================
+      //  TOPIC CONFIG
+      // ============================================================
+
+      const TOPICS = [
+        {
+          id: "html",
+          label: "HTML",
+          icon: "🌐",
+          color: "var(--html-color)",
+          bgColor: "rgba(249,115,22,0.15)",
+        },
+        {
+          id: "css",
+          label: "CSS",
+          icon: "🎨",
+          color: "var(--css-color)",
+          bgColor: "rgba(59,130,246,0.15)",
+        },
+        {
+          id: "javascript",
+          label: "JavaScript",
+          icon: "⚡",
+          color: "var(--js-color)",
+          bgColor: "rgba(234,179,8,0.15)",
+        },
+      ];
+
+      const DIFFICULTIES = ["easy", "medium", "hard"];
+      const TOPIC_ORDER = ["html", "css", "javascript"];
+
+      // ============================================================
+      //  STORAGE (localStorage)
+      // ============================================================
+
+      const STORAGE_KEY = "codequest_progress";
+
+      function loadProgress() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : {};
+        } catch {
+          return {};
+        }
+      }
+
+      function saveProgress(progress) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      }
+
+      function getStatus(exerciseId) {
+        const p = loadProgress();
+        return p[exerciseId] || "locked";
+      }
+
+      function setStatus(exerciseId, status) {
+        const p = loadProgress();
+        // Don't downgrade: completed > viewed > unlocked > locked
+        const rank = { locked: 0, unlocked: 1, viewed: 2, completed: 3 };
+        if (rank[status] > (rank[p[exerciseId]] || 0)) {
+          p[exerciseId] = status;
+        }
+        saveProgress(p);
+      }
+
+      function forceStatus(exerciseId, status) {
+        const p = loadProgress();
+        p[exerciseId] = status;
+        saveProgress(p);
+      }
+
+      function resetAllProgress() {
+        localStorage.removeItem(STORAGE_KEY);
+        initUnlocks();
+        navigateTo("dashboard");
+      }
+
+      function getTotalXP() {
+        const p = loadProgress();
+        let xp = 0;
+        for (const ex of exercises) {
+          if (p[ex.id] === "completed") xp += ex.xp;
+        }
+        return xp;
+      }
+
+      function getTopicStats(topicId) {
+        const p = loadProgress();
+        const topicExercises = exercises.filter((e) => e.topic === topicId);
+        let completed = 0,
+          viewed = 0;
+        for (const ex of topicExercises) {
+          if (p[ex.id] === "completed") completed++;
+          else if (p[ex.id] === "viewed") viewed++;
+        }
+        return { total: topicExercises.length, completed, viewed };
+      }
+
+      // ============================================================
+      //  UNLOCK LOGIC
+      // ============================================================
+
+      function isTopicUnlocked(topicId) {
+        const idx = TOPIC_ORDER.indexOf(topicId);
+        if (idx === 0) return true; // HTML always unlocked
+        // Previous topic must have all easy + medium completed
+        const prevTopic = TOPIC_ORDER[idx - 1];
+        const p = loadProgress();
+        const prevExercises = exercises.filter(
+          (e) =>
+            e.topic === prevTopic &&
+            (e.difficulty === "easy" || e.difficulty === "medium"),
+        );
+        return prevExercises.every((e) => p[e.id] === "completed");
+      }
+
+      function isExerciseUnlocked(exerciseId) {
+        const ex = exercises.find((e) => e.id === exerciseId);
+        if (!ex) return false;
+        if (!isTopicUnlocked(ex.topic)) return false;
+
+        // Within a topic, unlock order: easy first, then medium (requires all easy completed),
+        // then hard (requires all medium completed)
+        const p = loadProgress();
+        const topicExercises = exercises.filter((e) => e.topic === ex.topic);
+
+        if (ex.difficulty === "easy") {
+          // First easy is always unlocked if topic is unlocked; rest unlock sequentially
+          const easyExercises = topicExercises.filter(
+            (e) => e.difficulty === "easy",
+          );
+          const idx = easyExercises.indexOf(ex);
+          if (idx === 0) return true;
+          return p[easyExercises[idx - 1].id] === "completed";
+        }
+
+        if (ex.difficulty === "medium") {
+          // All easy must be completed first
+          const allEasy = topicExercises.filter((e) => e.difficulty === "easy");
+          if (!allEasy.every((e) => p[e.id] === "completed")) return false;
+          const mediumExercises = topicExercises.filter(
+            (e) => e.difficulty === "medium",
+          );
+          const idx = mediumExercises.indexOf(ex);
+          if (idx === 0) return true;
+          return p[mediumExercises[idx - 1].id] === "completed";
+        }
+
+        if (ex.difficulty === "hard") {
+          // All medium must be completed first
+          const allMedium = topicExercises.filter(
+            (e) => e.difficulty === "medium",
+          );
+          if (!allMedium.every((e) => p[e.id] === "completed")) return false;
+          const hardExercises = topicExercises.filter(
+            (e) => e.difficulty === "hard",
+          );
+          const idx = hardExercises.indexOf(ex);
+          if (idx === 0) return true;
+          return p[hardExercises[idx - 1].id] === "completed";
+        }
+
+        return false;
+      }
+
+      function initUnlocks() {
+        // Mark all unlocked exercises as unlocked status (if still locked)
+        const p = loadProgress();
+        for (const ex of exercises) {
+          if (
+            isExerciseUnlocked(ex.id) &&
+            (!p[ex.id] || p[ex.id] === "locked")
+          ) {
+            p[ex.id] = "unlocked";
+          }
+        }
+        saveProgress(p);
+      }
+
+      // ============================================================
+      //  ANSWER CHECKING
+      // ============================================================
+
+      function checkAnswer(exercise, userAnswer) {
+        const trimmed = userAnswer.trim();
+        if (!trimmed) {
+          return {
+            correct: false,
+            message: "Please write some code before checking.",
+          };
+        }
+        switch (exercise.topic) {
+          case "html":
+            return checkHTML(exercise.solution, trimmed);
+          case "css":
+            return checkCSS(exercise.solution, trimmed);
+          case "javascript":
+            return checkJS(exercise.solution, trimmed);
+          default:
+            return { correct: false, message: "Unknown topic." };
+        }
+      }
+
+      // --- HTML ---
+      function normalizeHTML(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html.trim(), "text/html");
+        const headContent = doc.head.innerHTML.trim();
+        const bodyContent = doc.body.innerHTML.trim();
+        const combined = headContent ? headContent + bodyContent : bodyContent;
+        return combined
+          .replace(/\s+/g, " ")
+          .replace(/>\s+</g, "><")
+          .trim()
+          .toLowerCase();
+      }
+
+      function checkHTML(solution, userAnswer) {
+        if (normalizeHTML(solution) === normalizeHTML(userAnswer)) {
+          return { correct: true, message: "Correct! Great HTML!" };
+        }
+        if (!userAnswer.includes("<")) {
+          return {
+            correct: false,
+            message:
+              "Your answer doesn't contain any HTML tags. Remember to use angle brackets < >.",
+          };
+        }
+        return {
+          correct: false,
+          message:
+            "Not quite right. Check your HTML structure, tags, and content carefully.",
+        };
+      }
+
+      // --- CSS ---
+      function normalizeCSS(css) {
+        return css
+          .replace(/\/\*[\s\S]*?\*\//g, "")
+          .replace(/\s+/g, " ")
+          .replace(/\s*{\s*/g, "{")
+          .replace(/\s*}\s*/g, "}")
+          .replace(/\s*:\s*/g, ":")
+          .replace(/\s*;\s*/g, ";")
+          .replace(/;}/g, "}")
+          .trim()
+          .toLowerCase();
+      }
+
+      function parseCSSRules(css) {
+        const rules = new Map();
+        const normalized = normalizeCSS(css);
+        const ruleRegex = /([^{}]+)\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g;
+        let match;
+        while ((match = ruleRegex.exec(normalized)) !== null) {
+          const selector = match[1].trim();
+          const body = match[2].trim();
+          const props = new Map();
+          if (!body.includes("{")) {
+            body
+              .split(";")
+              .filter(Boolean)
+              .forEach((decl) => {
+                const ci = decl.indexOf(":");
+                if (ci > -1)
+                  props.set(
+                    decl.slice(0, ci).trim(),
+                    decl.slice(ci + 1).trim(),
+                  );
+              });
+          } else {
+            props.set("__nested__", body);
+          }
+          rules.set(selector, props);
+        }
+        return rules;
+      }
+
+      function checkCSS(solution, userAnswer) {
+        if (normalizeCSS(solution) === normalizeCSS(userAnswer)) {
+          return { correct: true, message: "Correct! Nice CSS!" };
+        }
+
+        const solRules = parseCSSRules(solution);
+        const userRules = parseCSSRules(userAnswer);
+
+        for (const [selector, props] of solRules) {
+          if (!userRules.has(selector)) {
+            return {
+              correct: false,
+              message: `Missing the "${selector}" rule. Check your selector.`,
+            };
+          }
+          const userProps = userRules.get(selector);
+          for (const [prop, val] of props) {
+            if (prop === "__nested__") {
+              const un = userProps.get("__nested__") || "";
+              if (normalizeCSS(val) !== normalizeCSS(un)) {
+                return {
+                  correct: false,
+                  message: `The content inside "${selector}" doesn't match. Check the rules inside.`,
+                };
+              }
+              continue;
+            }
+            if (!userProps.has(prop)) {
+              return {
+                correct: false,
+                message: `Missing the "${prop}" property in your "${selector}" rule.`,
+              };
+            }
+            if (userProps.get(prop) !== val) {
+              return {
+                correct: false,
+                message: `The value for "${prop}" in "${selector}" should be "${val}".`,
+              };
+            }
+          }
+        }
+        return { correct: true, message: "Correct! Nice CSS!" };
+      }
+
+      // --- JavaScript ---
+      function runJS(code) {
+        const logs = [];
+        const mockConsole = {
+          log: function () {
+            const args = Array.from(arguments);
+            logs.push(
+              args
+                .map((a) => {
+                  if (typeof a === "object" && a !== null) {
+                    try {
+                      return JSON.stringify(a);
+                    } catch {
+                      return String(a);
+                    }
+                  }
+                  return String(a);
+                })
+                .join(" "),
+            );
+          },
+        };
+        try {
+          const fn = new Function("console", code);
+          const result = fn(mockConsole);
+          // Handle promise results for async exercises
+          if (
+            result &&
+            typeof result === "object" &&
+            typeof result.then === "function"
+          ) {
+            try {
+              result.then(function () {});
+            } catch (e) {}
+          }
+          return { logs, error: null };
+        } catch (e) {
+          return { logs: [], error: e.message || String(e) };
+        }
+      }
+
+      function checkJS(solution, userAnswer) {
+        try {
+          const solResult = runJS(solution);
+          const userResult = runJS(userAnswer);
+
+          if (solResult.error) {
+            return {
+              correct: false,
+              message:
+                "Internal error with the exercise solution. Please report this.",
+            };
+          }
+          if (userResult.error) {
+            return {
+              correct: false,
+              message: "Your code threw an error: " + userResult.error,
+            };
+          }
+
+          const solLogs = solResult.logs.map((s) =>
+            s.trim().replace(/\s+/g, " "),
+          );
+          const userLogs = userResult.logs.map((s) =>
+            s.trim().replace(/\s+/g, " "),
+          );
+
+          if (solLogs.length !== userLogs.length) {
+            return {
+              correct: false,
+              message:
+                "Expected " +
+                solLogs.length +
+                " console.log output(s), but got " +
+                userLogs.length +
+                ".",
+            };
+          }
+          for (let i = 0; i < solLogs.length; i++) {
+            if (solLogs[i] !== userLogs[i]) {
+              return {
+                correct: false,
+                message:
+                  "Output " +
+                  (i + 1) +
+                  " doesn't match. Expected \"" +
+                  solLogs[i] +
+                  '" but got "' +
+                  userLogs[i] +
+                  '".',
+              };
+            }
+          }
+          return {
+            correct: true,
+            message: "Correct! Your JavaScript works perfectly!",
+          };
+        } catch (e) {
+          return {
+            correct: false,
+            message: "Error running your code: " + (e.message || String(e)),
+          };
+        }
+      }
+
+      // ============================================================
+      //  ROUTING
+      // ============================================================
+
+      let currentView = "dashboard";
+      let currentExerciseId = null;
+
+      function navigateTo(view, exerciseId) {
+        currentView = view;
+        currentExerciseId = exerciseId || null;
+        render();
+      }
+
+      // ============================================================
+      //  RENDER: DASHBOARD
+      // ============================================================
+
+      function renderDashboard() {
+        const app = document.getElementById("app");
+        const xp = getTotalXP();
+        const totalExercises = exercises.length;
+        const p = loadProgress();
+        const completedCount = exercises.filter(
+          (e) => p[e.id] === "completed",
+        ).length;
+        const viewedCount = exercises.filter(
+          (e) => p[e.id] === "viewed",
+        ).length;
+
+        let html = `
+    <div class="dashboard-header">
+      <h1>Welcome to CodeQuest</h1>
+      <p>Master web development through hands-on coding exercises</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--xp)">⭐ ${xp}</div>
+        <div class="stat-label">Total XP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--success)">${completedCount}</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--text-dim)">${viewedCount}</div>
+        <div class="stat-label">Viewed (Answer Shown)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${totalExercises}</div>
+        <div class="stat-label">Total Exercises</div>
+      </div>
+    </div>
+
+    <div class="topics-grid">
+  `;
+
+        for (const topic of TOPICS) {
+          const unlocked = isTopicUnlocked(topic.id);
+          const stats = getTopicStats(topic.id);
+          const pct =
+            stats.total > 0
+              ? Math.round((stats.completed / stats.total) * 100)
+              : 0;
+          const topicExercises = exercises.filter((e) => e.topic === topic.id);
+
+          html += `
+      <div class="topic-card${unlocked ? "" : " locked"}">
+        <div class="topic-card-header">
+          <div class="topic-icon" style="background: ${topic.bgColor}; color: ${topic.color}">${topic.icon}</div>
+          <div>
+            <h2>${topic.label}</h2>
+            <div style="font-size:0.8rem;color:var(--text-dim)">${stats.completed}/${stats.total} completed</div>
+          </div>
+          ${unlocked ? "" : '<div class="topic-unlock">🔒 Complete previous topic</div>'}
+        </div>
+        <div class="topic-progress-bar">
+          <div class="topic-progress-fill" style="width:${pct}%;background:${topic.color}"></div>
+        </div>
+        <div class="topic-card-body">
+    `;
+
+          for (const diff of DIFFICULTIES) {
+            const diffExercises = topicExercises.filter(
+              (e) => e.difficulty === diff,
+            );
+            html += `<div class="difficulty-group">
+        <div class="difficulty-label">${diff}</div>
+        <div class="exercise-list">`;
+
+            for (const ex of diffExercises) {
+              const status = p[ex.id] || "locked";
+              const exUnlocked = isExerciseUnlocked(ex.id);
+              const isLocked = !exUnlocked && status === "locked";
+              const icon =
+                status === "completed"
+                  ? "✅"
+                  : status === "viewed"
+                    ? "👁️"
+                    : isLocked
+                      ? "🔒"
+                      : "🔓";
+
+              html += `<div class="exercise-item${isLocked ? " locked" : ""}" ${isLocked ? "" : `onclick="navigateTo('exercise','${ex.id}')"`}>
+          <span class="ex-status">${icon}</span>
+          <span class="ex-title">${ex.title}</span>
+          <span class="ex-xp">${ex.xp} XP</span>
+        </div>`;
+            }
+
+            html += `</div></div>`;
+          }
+
+          html += `</div></div>`;
+        }
+
+        html += `</div>
+    <div style="text-align:center;margin-top:36px">
+      <button onclick="openResetModal()" style="background:var(--surface2);color:var(--error);border:1px solid var(--border);padding:10px 24px;border-radius:6px;cursor:pointer;font-size:0.85rem">🗑️ Reset All Progress</button>
+    </div>
+  `;
+
+        app.innerHTML = html;
+      }
+
+      // ============================================================
+      //  RENDER: EXERCISE VIEW
+      // ============================================================
+
+      function renderExercise(exerciseId) {
+        const app = document.getElementById("app");
+        const ex = exercises.find((e) => e.id === exerciseId);
+
+        if (!ex) {
+          app.innerHTML =
+            '<p style="padding:40px;text-align:center">Exercise not found.</p>';
+          return;
+        }
+
+        // Find next exercise
+        const currentIdx = exercises.indexOf(ex);
+        let nextEx = null;
+        for (let i = currentIdx + 1; i < exercises.length; i++) {
+          if (
+            isExerciseUnlocked(exercises[i].id) ||
+            exercises[i].topic === ex.topic
+          ) {
+            nextEx = exercises[i];
+            break;
+          }
+        }
+
+        const langLabel =
+          ex.topic === "html"
+            ? "HTML"
+            : ex.topic === "css"
+              ? "CSS"
+              : "JavaScript";
+
+        app.innerHTML = `
+    <div class="exercise-view">
+      <div class="exercise-prompt-panel">
+        <button class="exercise-back-btn" onclick="navigateTo('dashboard')">← Back to Dashboard</button>
+
+        <div class="exercise-meta">
+          <span class="badge badge-${ex.topic}">${langLabel}</span>
+          <span class="badge badge-${ex.difficulty}">${ex.difficulty}</span>
+          <span class="badge" style="background:rgba(168,85,247,0.15);color:var(--xp)">${ex.xp} XP</span>
+        </div>
+
+        <h1>${ex.title}</h1>
+        <p class="exercise-prompt-text">${escapeHTML(ex.prompt)}</p>
+
+        <div id="hint-box" class="hint-box">
+          <strong>💡 Hint</strong>
+          <p>${escapeHTML(ex.hint)}</p>
+        </div>
+
+        <div id="solution-box" class="solution-box">
+          <strong>📖 Solution</strong>
+          <pre>${escapeHTML(ex.solution)}</pre>
+          <p class="explanation">${escapeHTML(ex.explanation)}</p>
+        </div>
+
+        <div class="prompt-actions">
+          <button onclick="toggleHint()">💡 Show Hint</button>
+          <button onclick="showSolution('${ex.id}')">👁️ Show Answer</button>
+        </div>
+      </div>
+
+      <div class="editor-panel">
+        <div class="editor-panel-header">
+          <span>${langLabel} Editor</span>
+          <span id="char-count" style="font-size:0.75rem"></span>
+        </div>
+        <textarea
+          id="code-editor"
+          class="editor-textarea"
+          placeholder="${escapeAttr(ex.starterCode)}"
+          spellcheck="false"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+        >${escapeHTML(loadDraft(ex.id) || "")}</textarea>
+        ${ex.topic === "html" || ex.topic === "css" ? '<div class="preview-pane"><iframe id="preview-frame" title="Preview"></iframe></div>' : ""}
+        <div class="editor-bottom-bar">
+          <button class="btn-check" id="btn-check" onclick="handleCheck('${ex.id}')">▶ Check Answer</button>
+          <button class="btn-next" id="btn-next" onclick="goNext()">Next Exercise →</button>
+          <div class="feedback-inline" id="feedback"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+        // Set up editor key handling (Tab support)
+        const editor = document.getElementById("code-editor");
+        editor.addEventListener("keydown", handleEditorKeydown);
+        editor.addEventListener("input", function () {
+          saveDraft(ex.id, editor.value);
+          updateCharCount(editor.value);
+          updatePreview(ex, editor.value);
+        });
+        updateCharCount(editor.value);
+        updatePreview(ex, editor.value);
+
+        // Store nextEx for goNext
+        window._nextExercise = nextEx;
+      }
+
+      function escapeHTML(str) {
+        const div = document.createElement("div");
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function escapeAttr(str) {
+        return str.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      }
+
+      function handleEditorKeydown(e) {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          const ta = e.target;
+          const start = ta.selectionStart;
+          const end = ta.selectionEnd;
+          ta.value =
+            ta.value.substring(0, start) + "  " + ta.value.substring(end);
+          ta.selectionStart = ta.selectionEnd = start + 2;
+        }
+      }
+
+      function updateCharCount(val) {
+        const el = document.getElementById("char-count");
+        if (el) el.textContent = val.length + " chars";
+      }
+
+      function updatePreview(exercise, code) {
+        const frame = document.getElementById("preview-frame");
+        if (!frame) return;
+
+        if (exercise.topic === "html") {
+          frame.srcdoc = code;
+        } else if (exercise.topic === "css") {
+          frame.srcdoc =
+            '<div class="box container grid fade link card content title btn" id="header"><h1 class="title">Preview</h1><p class="content">Sample text</p></div><style>' +
+            code +
+            "</style>";
+        }
+      }
+
+      // ============================================================
+      //  DRAFT PERSISTENCE (save what user is typing)
+      // ============================================================
+
+      function saveDraft(exerciseId, code) {
+        try {
+          sessionStorage.setItem("cq_draft_" + exerciseId, code);
+        } catch {}
+      }
+
+      function loadDraft(exerciseId) {
+        try {
+          return sessionStorage.getItem("cq_draft_" + exerciseId) || "";
+        } catch {
+          return "";
+        }
+      }
+
+      function clearDraft(exerciseId) {
+        try {
+          sessionStorage.removeItem("cq_draft_" + exerciseId);
+        } catch {}
+      }
+
+      // ============================================================
+      //  EXERCISE ACTIONS
+      // ============================================================
+
+      function toggleHint() {
+        const box = document.getElementById("hint-box");
+        box.classList.toggle("visible");
+      }
+
+      function showSolution(exerciseId) {
+        const box = document.getElementById("solution-box");
+        box.classList.toggle("visible");
+        setStatus(exerciseId, "viewed");
+        updateNavXP();
+      }
+
+      function handleCheck(exerciseId) {
+        const editor = document.getElementById("code-editor");
+        const feedback = document.getElementById("feedback");
+        const btnNext = document.getElementById("btn-next");
+        const ex = exercises.find((e) => e.id === exerciseId);
+
+        const result = checkAnswer(ex, editor.value);
+
+        feedback.textContent = result.message;
+        feedback.className =
+          "feedback-inline " + (result.correct ? "correct" : "incorrect");
+
+        if (result.correct) {
+          setStatus(exerciseId, "completed");
+          clearDraft(exerciseId);
+          initUnlocks(); // unlock next exercises
+          updateNavXP();
+          if (
+            window._nextExercise &&
+            isExerciseUnlocked(window._nextExercise.id)
+          ) {
+            btnNext.style.display = "inline-block";
+          }
+        }
+      }
+
+      function goNext() {
+        if (window._nextExercise) {
+          navigateTo("exercise", window._nextExercise.id);
+        }
+      }
+
+      // ============================================================
+      //  MODAL
+      // ============================================================
+
+      function openResetModal() {
+        document.getElementById("reset-modal").classList.add("visible");
+      }
+
+      function closeResetModal() {
+        document.getElementById("reset-modal").classList.remove("visible");
+      }
+
+      function confirmReset() {
+        closeResetModal();
+        resetAllProgress();
+      }
+
+      // ============================================================
+      //  NAV XP
+      // ============================================================
+
+      function updateNavXP() {
+        document.getElementById("nav-xp").textContent =
+          "⭐ " + getTotalXP() + " XP";
+      }
+
+      // ============================================================
+      //  MAIN RENDER
+      // ============================================================
+
+      function render() {
+        updateNavXP();
+        if (currentView === "exercise" && currentExerciseId) {
+          renderExercise(currentExerciseId);
+        } else {
+          renderDashboard();
+        }
+      }
+
+      // ============================================================
+      //  INIT
+      // ============================================================
+
+      initUnlocks();
+      render();
+    </script>
+  </body>
+</html>
